@@ -1,9 +1,18 @@
 <?php
+session_start();
+
+// Check if user is logged in and is a mentor
+if (!isset($_SESSION['mentor_id']) || !isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'Mentor') {
+    header("Location: ../../auth/login.php");
+    exit();
+}
+
 // Include database connection dan controller
 require_once __DIR__ . '/../../config/Database.php';
 require_once __DIR__ . '/../../controller/MentorController.php';
 
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+
 try {
     // Initialize database dan controller
     $database = new Database();
@@ -11,14 +20,29 @@ try {
     
     $mentorId = $_SESSION['mentor_id'];
     
-    // Get mentor data
+    // Get mentor data - INI YANG DIPERBAIKI
     $mentor = $controller->getMentorData($mentorId);
+    
+    // Set mentor name from the fetched data or fallback to session
+    if ($mentor && isset($mentor['username'])) {
+        $mentorName = $mentor['username'];
+    } else {
+        // Fallback: try direct database query
+        $db = $database->connect();
+        if ($db) {
+            $stmt = $db->prepare("SELECT username FROM users WHERE id = ? AND user_type = 'Mentor'");
+            $stmt->execute([$mentorId]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $mentorName = $user['username'] ?? $_SESSION['username'] ?? 'Mentor';
+        } else {
+            $mentorName = $_SESSION['username'] ?? 'Mentor';
+        }
+    }
     
     // Get dashboard data
     $dashboardData = $controller->getDashboardData($mentorId);
     
     // Extract data dengan fallback values
-    $mentorName = $mentor['full_name'] ?? $mentor['username'] ?? 'Mentor';
     $newRegistrations = $dashboardData['newRegistrations'] ?? 0;
     $unreadMessages = $dashboardData['unreadMessages'] ?? 0;
     $consistencyIncrease = $dashboardData['consistencyIncrease'] ?? 0;
@@ -37,9 +61,21 @@ try {
     $recentActivities = $dashboardData['recentActivities'] ?? [];
 
 } catch (Exception $e) {
+    // Log error but don't display to user in production
     error_log("Dashboard error: " . $e->getMessage());
+    
+    // For debugging - remove this in production
+    if (isset($_GET['debug']) && $_GET['debug'] == '1') {
+        echo "<div style='background: #fed7d7; padding: 10px; margin: 10px; border-radius: 5px;'>";
+        echo "<strong>DEBUG ERROR:</strong><br>";
+        echo "Message: " . $e->getMessage() . "<br>";
+        echo "Line: " . $e->getLine() . "<br>";
+        echo "File: " . basename($e->getFile()) . "<br>";
+        echo "</div>";
+    }
+    
     // Set default values if error occurs
-    $mentorName = 'Mentor';
+    $mentorName = $_SESSION['username'] ?? 'Mentor';
     $newRegistrations = 0;
     $unreadMessages = 0;
     $consistencyIncrease = 0;
@@ -54,6 +90,7 @@ try {
     $monthlyRegistrations = array_fill(0, 7, 0);
     $recentActivities = [];
 }
+
 ?>
 
 <!DOCTYPE html>
