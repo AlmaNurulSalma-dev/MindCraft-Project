@@ -1,0 +1,152 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f5f7fa;
+}
+
+.chatbot-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.chatbot-header {
+  background: linear-gradient(135deg, #f7a1ff 5%, #8c6fff 40%, #3edbf0 90%);
+  padding: 24px;
+  text-align: center;
+  color: black;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.chatbot-header h1 {
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.chatbot-header p {
+  margin-bottom: 20px;
+  color: black;
+}
+
+.greeting-options {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.option-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  min-width: 220px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+}
+
+.option-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.chat-box {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  padding: 12px 18px;
+  margin: 6px 0;
+  border-radius: 16px;
+  max-width: 70%;
+  line-height: 1.5;
+  word-wrap: break-word;
+  font-size: 15px;
+}
+
+.message.user {
+  align-self: flex-end;
+  background-color: #dff9fb;
+  color: #130f40;
+}
+
+.message.bot {
+  align-self: flex-start;
+  background-color: #ffffff;
+  color: #2d3436;
+  border: 1px solid #dcdde1;
+}
+
+.chat-form {
+  display: flex;
+  padding: 16px;
+  background-color: white;
+  border-top: 1px solid #eee;
+}
+
+.chat-input {
+  flex-grow: 1;
+  padding: 12px 18px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 15px;
+  outline: none;
+}
+
+.chat-submit {
+  margin-left: 10px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #3f8efc, #5a9ff9);
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.chat-submit:hover {
+  background-color: #74b9ff;
+}
+
+.refresh-button {
+  background: none;
+  border: none;
+  color: #0984e3;
+  font-size: 25px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.refresh-button:hover {
+  text-decoration: underline;
+}
+
+.bubble-button {
+  position: fixed;
+  bottom: 100px;
+  left: 25px;
+  width: 55px;
+  height: 55px;
+  background-color: white;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  background-image: url("/MindCraft-Project/assets/img/logout.png"); /* ganti sesuai avatar */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.bubble-button:hover {
+  transform: scale(1.05);
+}
